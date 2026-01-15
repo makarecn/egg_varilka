@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Варилка Яиц 🥚</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            margin: 0;
+            background: linear-gradient(180deg, #000 0%, #1a0000 100%);
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #egg {
+            width: 200px;
+            height: 250px;
+            background: radial-gradient(ellipse at center,
+                #fff 40%, #f0f0f0 45%, #ddd 50%, #f5f5f5 55%, #e0e0e0 60%, #fff 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            margin: 20px auto;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        #egg.boil {
+            background: radial-gradient(ellipse at center,
+                #ffeb3b 40%, #ffc107 60%, #ff9800 100%);
+            animation: dance 2s infinite;
+        }
+        #egg.done {
+            animation: crack 1s infinite;
+        }
+        @keyframes dance {
+            0%, 100% { transform: rotate(-5deg) scale(1); }
+            50% { transform: rotate(5deg) scale(1.05); }
+        }
+        @keyframes crack {
+            0%, 100% { transform: scale(1) rotate(0); }
+            50% {
+                transform: scale(1.1) rotate(5deg);
+                box-shadow: inset 0 0 20px rgba(255,0,0,0.5);
+            }
+        }
+        .crack {
+            position: absolute;
+            background: rgba(255,0,0,0.8);
+            width: 2px;
+            height: 30px;
+            transform-origin: bottom;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        #crack1 { top: 20%; left: 40%; transform: rotate(30deg); }
+        #crack2 { top: 30%; right: 30%; transform: rotate(-20deg); }
+        #crack3 { bottom: 20%; left: 30%; transform: rotate(45deg); }
+
+        #time {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px;
+        }
+        #fact {
+            font-size: 18px;
+            opacity: 0;
+            position: absolute;
+            top: 20px;
+            text-align: center;
+            animation: pop 3s forwards;
+        }
+        @keyframes pop {
+            0%   { opacity: 0; transform: scale(0.5); }
+            20%  { opacity: 1; transform: scale(1.1); }
+            80%  { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1); }
+        }
+        button {
+            background: #ff5722;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 20px;
+            border-radius: 50px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        #levels {
+            display: flex;
+            gap: 10px;
+        }
+        #share {
+            background: #00ff88;
+        }
+    </style>
+</head>
+<body>
+    <div id="egg">
+        <div id="crack1" class="crack"></div>
+        <div id="crack2" class="crack"></div>
+        <div id="crack3" class="crack"></div>
+    </div>
+
+    <div id="time">03:00</div>
+    <div id="fact"></div>
+
+    <div id="levels">
+        <button onclick="setTime(180)">Вкрутую</button>
+        <button onclick="setTime(360)">Мешочек</button>
+        <button onclick="setTime(540)">Всмятку</button>
+    </div>
+
+    <button id="startBtn" onclick="toggleTimer()">Старт</button>
+    <button id="share" onclick="shareResult()" style="display:none;">Поделиться 🥚</button>
+
+    <!-- Замени src на свой mp3 позже, если хочешь -->
+    <audio id="music" loop src="https://www.soundjay.com/misc/sounds/boiling-water-1.mp3"></audio>
+
+    <script>
+        let timeLeft = 180;
+        let isRunning = false;
+        let timer;
+        let factTimer;
+        const music = document.getElementById('music');
+
+        const facts = [
+            'Скорлупа имеет 17 000 пор! 🥚',
+            'Курица вертит яйцо до 50 раз в день.',
+            'Свежие яйца тонут в воде, старые всплывают.',
+            'Желток — почти половина жира и энергии яйца.',
+            'Яйца – один из лучших источников белка.'
+        ];
+
+        const egg = document.getElementById('egg');
+        const timeEl = document.getElementById('time');
+        const startBtn = document.getElementById('startBtn');
+        const cracks = document.querySelectorAll('.crack');
+
+        function updateDisplay() {
+            const mins = Math.floor(timeLeft / 60);
+            const secs = timeLeft % 60;
+            timeEl.textContent =
+                mins.toString().padStart(2,'0') + ':' +
+                secs.toString().padStart(2,'0');
+        }
+
+        function setTime(t) {
+            if (isRunning) return;
+            timeLeft = t;
+            updateDisplay();
+        }
+
+        function toggleTimer() {
+            if (!isRunning) {
+                // старт
+                isRunning = true;
+                startBtn.textContent = 'Стоп';
+                egg.classList.add('boil');
+                music.play().catch(() => {});
+
+                timer = setInterval(() => {
+                    timeLeft--;
+                    updateDisplay();
+
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        clearInterval(factTimer);
+                        timeLeft = 0;
+                        updateDisplay();
+                        egg.classList.remove('boil');
+                        egg.classList.add('done');
+                        cracks.forEach(c => c.style.opacity = '1');
+                        music.pause();
+                        startBtn.style.display = 'none';
+                        document.getElementById('share').style.display = 'block';
+                        if (window.Telegram && Telegram.WebApp && Telegram.WebApp.HapticFeedback) {
+                            Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+                        }
+                    }
+                }, 1000);
+
+                factTimer = setInterval(() => {
+                    const f = facts[Math.floor(Math.random() * facts.length)];
+                    const factEl = document.getElementById('fact');
+                    factEl.textContent = f;
+                    factEl.style.opacity = '1';
+                    setTimeout(() => factEl.style.opacity = '0', 3000);
+                }, 30000);
+
+            } else {
+                // стоп / сброс
+                clearInterval(timer);
+                clearInterval(factTimer);
+                egg.classList.remove('boil', 'done');
+                cracks.forEach(c => c.style.opacity = '0');
+                music.pause();
+                isRunning = false;
+                startBtn.textContent = 'Старт';
+                document.getElementById('share').style.display = 'none';
+            }
+        }
+
+        egg.addEventListener('pointerdown', () => {
+            if (isRunning) {
+                egg.style.animationDuration = '1s';
+                if (window.Telegram && Telegram.WebApp && Telegram.WebApp.HapticFeedback) {
+                    Telegram.WebApp.HapticFeedback.impactOccurred('light');
+                }
+                setTimeout(() => {
+                    egg.style.animationDuration = '2s';
+                }, 500);
+            }
+        });
+
+        function shareResult() {
+            const text = 'Я сварила яйца в egg_varilka_bot! Попробуй тоже 🥚';
+            if (window.Telegram && Telegram.WebApp && Telegram.WebApp.showShareMenu) {
+                Telegram.WebApp.showShareMenu({ text });
+            } else {
+                alert(text);
+            }
+        }
+
+        if (window.Telegram && Telegram.WebApp) {
+            Telegram.WebApp.ready();
+            Telegram.WebApp.expand();
+        }
+
+        updateDisplay();
+    </script>
+</body>
+</html>
