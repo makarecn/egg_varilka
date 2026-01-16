@@ -102,12 +102,12 @@
 </head>
 <body>
     <div id="splashScreen" ><img src="splash.png.png" alt="Splash"></div>
-    <div id="egg">
+        <img id="eggGif" src="timer.gif.gif" alt="Boiling egg" style="width: 200px; height: 250px; display: none;">
+    <div id="egg" style="display: block;">
         <div id="crack1" class="crack"></div>
         <div id="crack2" class="crack"></div>
         <div id="crack3" class="crack"></div>
     </div>
-
     <div id="time">03:00</div>
     <div id="fact"></div>
 
@@ -163,6 +163,8 @@
                 isRunning = true;
                 startBtn.textContent = 'Стоп';
                 egg.classList.add('boil');
+                            document.getElementById('egg').style.display = 'none';
+            document.getElementById('eggGif').style.display = 'block';
                 music.play().catch(() => {});
 
                 timer = setInterval(() => {
@@ -199,6 +201,8 @@
                 clearInterval(timer);
                 clearInterval(factTimer);
                 egg.classList.remove('boil', 'done');
+                            document.getElementById('egg').style.display = 'block';
+            document.getElementById('eggGif').style.display = 'none';
                 cracks.forEach(c => c.style.opacity = '0');
                 music.pause();
                 isRunning = false;
