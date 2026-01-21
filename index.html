@@ -168,6 +168,7 @@
 
                 timer = setInterval(() => {
                     timeLeft--;
+                                    egg.style.background = 'transparent';
                                     egg.style.opacity = '0';
                     updateDisplay();
 
@@ -205,6 +206,7 @@
             document.getElementById('eggGif').style.display = 'none';
                 cracks.forEach(c => c.style.opacity = '0');
                 music.pause();
+                                egg.style.background = '';
                 egg.style.opacity = '1';
                 startBtn.textContent = 'Старт';
                 document.getElementById('share').style.display = 'none';
