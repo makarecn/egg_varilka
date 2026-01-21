@@ -173,6 +173,7 @@
                     updateDisplay();
 
                     if (timeLeft <= 0) {
+                                        egg.style.overflow = 'visible';
                         clearInterval(timer);
                         clearInterval(factTimer);
                         timeLeft = 0;
@@ -211,6 +212,7 @@
                 startBtn.textContent = 'Старт';
                 document.getElementById('share').style.display = 'none';
             }
+                            egg.style.overflow = '';
         }
 
         egg.addEventListener('pointerdown', () => {
