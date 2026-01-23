@@ -6,6 +6,9 @@
     <title>Варилка Яиц 🥚</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
             margin: 0;
             background: linear-gradient(180deg, #000 0%, #1a0000 100%);
@@ -15,22 +18,34 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             overflow: hidden;
+            padding: 10px;
         }
-                #eggGif {
-                                display: none;
-                            }
+        .container {
+            max-width: 480px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #eggGif {
+            display: none;
+        }
         #egg {
             width: 140px;
-            height: 180px;            background: radial-gradient(ellipse at center,
+            height: 180px; 
+            background: radial-gradient(ellipse at center,
                 #fff 40%, #f0f0f0 45%, #ddd 50%, #f5f5f5 55%, #e0e0e0 60%, #fff 100%);
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
             margin: 20px auto;
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
-            margin: 10px auto;        #egg.boil {
+        }
+        #egg.boil {
             background: radial-gradient(ellipse at center,
                 #ffeb3b 40%, #ffc107 60%, #ff9800 100%);
             animation: dance 2s infinite;
@@ -61,71 +76,114 @@
         #crack1 { top: 20%; left: 40%; transform: rotate(30deg); }
         #crack2 { top: 30%; right: 30%; transform: rotate(-20deg); }
         #crack3 { bottom: 20%; left: 30%; transform: rotate(45deg); }
-
         #time {
-            font-size: 36px;            font-weight: bold;
-            margin: 10px;        }
+            font-size: 36px; 
+            font-weight: bold;
+            margin: 10px; 
+        }
         #fact {
-            font-size: 18px;
+            font-size: 16px;
             opacity: 0;
-            position: absolute;
-            top: 20px;
             text-align: center;
             animation: pop 3s forwards;
+            padding: 0 20px;
+            max-width: 100%;
         }
         @keyframes pop {
-            0%   { opacity: 0; transform: scale(0.5); }
-            20%  { opacity: 1; transform: scale(1.1); }
-            80%  { opacity: 1; transform: scale(1); }
+            0% { opacity: 0; transform: scale(0.5); }
+            20% { opacity: 1; transform: scale(1.1); }
+            80% { opacity: 1; transform: scale(1); }
             100% { opacity: 0; transform: scale(1); }
         }
         button {
             background: #ff5722;
             color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: 16px;            border-radius: 50px;
+            padding: 12px 24px;
+            font-size: 16px; 
+            border-radius: 50px;
             margin: 10px;
             cursor: pointer;
+            touch-action: manipulation;
         }
         #levels {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
         #share {
             background: #00ff88;
         }
-        #splashScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #808080; display: flex; align-items: center; justify-content: center; z-index: 9999; } #splashScreen img { max-width: 90%; max-height: 90%; object-fit: contain; } #splashScreen.hidden { display: none; }
+        #splashScreen { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: #808080; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            z-index: 9999;
+        } 
+        #splashScreen img { 
+            max-width: 90%; 
+            max-height: 90%; 
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+        } 
+        #splashScreen.hidden { 
+            display: none; 
+        }
+        
+        @media (max-width: 480px) {
+            #egg {
+                width: 120px;
+                height: 150px;
+            }
+            #time {
+                font-size: 32px;
+            }
+            button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            #fact {
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div id="splashScreen" ><img src="splash.png.png" alt="Splash"></div>
-    <div id="egg" style="display: block;">
-            <img id="eggGif" src="timer.gif" alt="Boiling egg" style="max-width: 300px; height: auto; background: #f0f0f0; border-radius: 50%; padding: 20px;">        <div id="crack2" class="crack"></div>
-        <div id="crack3" class="crack"></div>
+    <div id="splashScreen">
+        <img src="splash.png.png" alt="Splash">
     </div>
-    <div id="time">03:00</div>
-    <div id="fact"></div>
-
-    <div id="levels">
-        <button onclick="setTime(180)">Вкрутую</button>
-        <button onclick="setTime(360)">Мешочек</button>
-        <button onclick="setTime(540)">Всмятку</button>
+    <div class="container">
+        <div id="egg" style="display: block;">
+            <img id="eggGif" src="timer.gif" alt="Boiling egg" style="max-width: 300px; height: auto; background: #f0f0f0; border-radius: 50%; padding: 20px;"> 
+            <div id="crack1" class="crack"></div>
+            <div id="crack2" class="crack"></div>
+            <div id="crack3" class="crack"></div>
+        </div>
+        <div id="time">03:00</div>
+        <div id="fact"></div>
+        <div id="levels">
+            <button onclick="setTime(180)">Вкрутую</button>
+            <button onclick="setTime(360)">Мешочек</button>
+            <button onclick="setTime(540)">Всмятку</button>
+        </div>
+        <button id="startBtn" onclick="toggleTimer()">Старт</button>
+        <button id="share" onclick="shareResult()" style="display:none;">Поделиться 🥚</button>
     </div>
-
-    <button id="startBtn" onclick="toggleTimer()">Старт</button>
-    <button id="share" onclick="shareResult()" style="display:none;">Поделиться 🥚</button>
-
-    <!-- Замени src на свой mp3 позже, если хочешь -->
     <audio id="music" loop src="https://www.soundjay.com/misc/sounds/boiling-water-1.mp3"></audio>
-
     <script>
         let timeLeft = 180;
         let isRunning = false;
         let timer;
         let factTimer;
         const music = document.getElementById('music');
-
         const facts = [
             'Скорлупа имеет 17 000 пор! 🥚',
             'Курица вертит яйцо до 50 раз в день.',
@@ -133,7 +191,6 @@
             'Желток — почти половина жира и энергии яйца.',
             'Яйца – один из лучших источников белка.'
         ];
-
         const egg = document.getElementById('egg');
         const timeEl = document.getElementById('time');
         const startBtn = document.getElementById('startBtn');
@@ -142,8 +199,8 @@
         function updateDisplay() {
             const mins = Math.floor(timeLeft / 60);
             const secs = timeLeft % 60;
-            timeEl.textContent =
-                mins.toString().padStart(2,'0') + ':' +
+            timeEl.textContent = 
+                mins.toString().padStart(2,'0') + ':' + 
                 secs.toString().padStart(2,'0');
         }
 
@@ -155,20 +212,17 @@
 
         function toggleTimer() {
             if (!isRunning) {
-                // старт
                 isRunning = true;
                 startBtn.textContent = 'Стоп';
                 egg.classList.add('boil');
                 document.getElementById('eggGif').style.display = 'block';
-
                 timer = setInterval(() => {
                     timeLeft--;
-                                    egg.style.background = 'transparent';
-                                    egg.style.opacity = '0';
+                    egg.style.background = 'transparent';
+                    egg.style.opacity = '0';
                     updateDisplay();
-
                     if (timeLeft <= 0) {
-                                        egg.style.overflow = 'visible';
+                        egg.style.overflow = 'visible';
                         clearInterval(timer);
                         clearInterval(factTimer);
                         timeLeft = 0;
@@ -184,7 +238,6 @@
                         }
                     }
                 }, 1000);
-
                 factTimer = setInterval(() => {
                     const f = facts[Math.floor(Math.random() * facts.length)];
                     const factEl = document.getElementById('fact');
@@ -192,22 +245,20 @@
                     factEl.style.opacity = '1';
                     setTimeout(() => factEl.style.opacity = '0', 3000);
                 }, 30000);
-
             } else {
-                // стоп / сброс
                 clearInterval(timer);
                 clearInterval(factTimer);
                 egg.classList.remove('boil', 'done');
-                            document.getElementById('egg').style.display = 'block';
-            document.getElementById('eggGif').style.display = 'none';
+                document.getElementById('egg').style.display = 'block';
+                document.getElementById('eggGif').style.display = 'none';
                 cracks.forEach(c => c.style.opacity = '0');
                 music.pause();
-                                egg.style.background = '';
+                egg.style.background = '';
                 egg.style.opacity = '1';
                 startBtn.textContent = 'Старт';
                 document.getElementById('share').style.display = 'none';
             }
-                            egg.style.overflow = '';
+            egg.style.overflow = '';
         }
 
         egg.addEventListener('pointerdown', () => {
@@ -217,7 +268,7 @@
                     Telegram.WebApp.HapticFeedback.impactOccurred('light');
                 }
                 setTimeout(() => {
-   width: 200px                 egg.style.animationDuration = '2s';
+                    egg.style.animationDuration = '2s';
                 }, 500);
             }
         });
@@ -237,7 +288,10 @@
         }
 
         updateDisplay();
-    setTimeout(() => { const splash = document.getElementById('splashScreen'); if (splash) splash.classList.add('hidden'); }, 3000);
+        setTimeout(() => { 
+            const splash = document.getElementById('splashScreen'); 
+            if (splash) splash.classList.add('hidden'); 
+        }, 3000);
     </script>
 </body>
 </html>
