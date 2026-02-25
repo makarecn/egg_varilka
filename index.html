@@ -2,8 +2,8 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Damn Egg Cooker 🥚</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Варилка Яиц 🥚</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         html, body {
@@ -30,6 +30,7 @@
             border-radius: 10px;
             font-size: 1.2rem;
             margin: 10px;
+            cursor: pointer;
         }
         #main-screen {
             display: flex;
@@ -119,6 +120,7 @@
             -webkit-text-fill-color: transparent;
             font-size: 2.6rem;
             font-weight: 900;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             text-shadow: none;
             text-align: center;
             max-width: 90%;
@@ -131,35 +133,38 @@
 </head>
 <body>
 
+    <!-- Заставка -->
     <div id="splash" class="screen">
         <img src="splash.gif.gif" alt="Splash">
         <div id="splash-text">Cook This Damn Egg Already</div>
     </div>
 
+    <!-- Главный экран -->
     <div id="main-screen" class="screen">
         <div class="stages-grid">
             <div class="stage" data-time="120">
-                <img src="yolk-2min.jpg" alt="Очень жидкий">
+                <img src="eggs1.jpg.png" alt="">
             </div>
             <div class="stage" data-time="180">
-                <img src="yolk-3min.jpg" alt="Всмятку">
+                <img src="eggs2.jpg.png" alt="">
             </div>
             <div class="stage" data-time="240">
-                <img src="yolk-4min.jpg" alt="Полужидкий">
+                <img src="eggs3.jpg.png" alt="">
             </div>
             <div class="stage" data-time="360">
-                <img src="yolk-6min.jpg" alt="Средний">
+                <img src="eggs4.jpg.png" alt="">
             </div>
             <div class="stage" data-time="480">
-                <img src="yolk-8min.jpg" alt="Вкрутую">
+                <img src="eggs5.jpg.png" alt="">
             </div>
             <div class="stage" data-time="720">
-                <img src="yolk-12min.jpg" alt="Очень вкрутую">
+                <img src="eggs6.jpg.png" alt="">
             </div>
         </div>
         <button onclick="showFacts()">Факты и рецепты 📖</button>
     </div>
 
+    <!-- Таймер -->
     <div id="timer-screen" class="screen">
         <h2 id="timer-label"></h2>
         <h1 id="timer-display">00:00</h1>
@@ -169,20 +174,21 @@
         <audio id="timer-audio" src="timer_sound.mp3" loop></audio>
     </div>
 
+    <!-- Факты и рецепты -->
     <div id="facts-screen" class="screen">
-        <h1>Факты и рецепты 🥚</h1>
+        <h1>Интересные факты и рецепты 🥚</h1>
         <h2>Факты:</h2>
         <ul>
-            <li>Яйца — полный белок со всеми аминокислотами.</li>
+            <li>Яйца — полный белок, содержащий все аминокислоты.</li>
             <li>Цвет скорлупы не влияет на вкус и пользу.</li>
-            <li>Самое большое яйцо — 23 см в диаметре (2010).</li>
-            <li>Желток — это одна гигантская клетка.</li>
+            <li>Самое большое яйцо в мире — 23 см в диаметре (2010 год).</li>
+            <li>Желток — это одна огромная клетка!</li>
         </ul>
-        <h2>Рецепты:</h2>
+        <h2>Простые рецепты:</h2>
         <ul>
-            <li><b>Яичница</b>: 2 яйца, 3 мин на сковороде + соль.</li>
-            <li><b>Омлет</b>: Взбить с молоком, жарить с овощами 5 мин.</li>
-            <li><b>Пашот</b>: В воду с уксусом, 3 мин.</li>
+            <li><b>Яичница:</b> Разбей 2 яйца на сковороду, жарь 3 мин. Добавь соль.</li>
+            <li><b>Омлет:</b> Взбей 2 яйца с молоком, жарь с овощами 5 мин.</li>
+            <li><b>Пашот:</b> В кипящую воду с уксусом разбей яйцо, вари 3 мин.</li>
         </ul>
         <button onclick="backToMain()">Назад</button>
     </div>
@@ -191,15 +197,17 @@
         Telegram.WebApp.ready();
         Telegram.WebApp.expand();
 
+        // Заставка → главный экран
         setTimeout(() => {
             document.getElementById('splash').style.display = 'none';
             document.getElementById('main-screen').style.display = 'flex';
         }, 3000);
 
+        // Клик по картинке → таймер
         document.querySelectorAll('.stage').forEach(stage => {
             stage.addEventListener('click', () => {
                 const time = parseInt(stage.dataset.time);
-                const label = stage.querySelector('img').alt;
+                const label = stage.querySelector('img').alt || 'Яйцо';
                 openTimer(time, label);
             });
         });
@@ -208,17 +216,19 @@
             document.getElementById('main-screen').style.display = 'none';
             document.getElementById('timer-screen').style.display = 'flex';
 
-            document.getElementById('timer-label').innerText = label;
+            const timerLabel = document.getElementById('timer-label');
+            const timerDisplay = document.getElementById('timer-display');
+            const startBtn = document.getElementById('start-btn');
+            const audio = document.getElementById('timer-audio');
+            const dancingEgg = document.getElementById('dancing-egg');
+
+            timerLabel.innerText = label;
             let seconds = initialSeconds;
             updateTimerDisplay(seconds);
 
-            const startBtn = document.getElementById('start-btn');
-            const audio = document.getElementById('timer-audio');
-            const egg = document.getElementById('dancing-egg');
-
             audio.pause();
             audio.currentTime = 0;
-            egg.style.display = 'none';
+            dancingEgg.style.display = 'none';
             startBtn.innerText = 'Старт';
             startBtn.disabled = false;
 
@@ -226,18 +236,21 @@
 
             startBtn.onclick = () => {
                 if (interval) return;
+
                 startBtn.innerText = 'Идёт...';
                 startBtn.disabled = true;
-                audio.play().catch(() => {});
-                egg.style.display = 'block';
+                audio.play().catch(err => console.log("Audio blocked:", err));
+                dancingEgg.style.display = 'block';
 
                 interval = setInterval(() => {
                     seconds--;
                     updateTimerDisplay(seconds);
+
                     if (seconds <= 0) {
                         clearInterval(interval);
+                        interval = null;
                         audio.pause();
-                        egg.style.display = 'none';
+                        dancingEgg.style.display = 'none';
                         Telegram.WebApp.HapticFeedback.notificationOccurred('success');
                         Telegram.WebApp.showAlert('Яйцо готово! 🥚');
                         startBtn.innerText = 'Старт';
@@ -251,7 +264,7 @@
             const min = Math.floor(seconds / 60);
             const sec = seconds % 60;
             document.getElementById('timer-display').innerText = 
-                `${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+                `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
         }
 
         function showFacts() {
