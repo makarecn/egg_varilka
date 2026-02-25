@@ -6,292 +6,140 @@
     <title>Варилка Яиц 🥚</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            margin: 0;
-            background: linear-gradient(180deg, #000 0%, #1a0000 100%);
-            color: #fff;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            overflow: hidden;
-            padding: 10px;
-        }
-        .container {
-            max-width: 480px;
-            width: 100%;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        #eggGif {
-            display: none;
-        }
-        #egg {
-            width: 140px;
-            height: 180px; 
-            background: radial-gradient(ellipse at center,
-                #fff 40%, #f0f0f0 45%, #ddd 50%, #f5f5f5 55%, #e0e0e0 60%, #fff 100%);
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            margin: 20px auto;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-        }
-        #egg.boil {
-            background: radial-gradient(ellipse at center,
-                #ffeb3b 40%, #ffc107 60%, #ff9800 100%);
-            animation: dance 2s infinite;
-        }
-        #egg.done {
-            animation: crack 1s infinite;
-        }
-        @keyframes dance {
-            0%, 100% { transform: rotate(-5deg) scale(1); }
-            50% { transform: rotate(5deg) scale(1.05); }
-        }
-        @keyframes crack {
-            0%, 100% { transform: scale(1) rotate(0); }
-            50% {
-                transform: scale(1.1) rotate(5deg);
-                box-shadow: inset 0 0 20px rgba(255,0,0,0.5);
-            }
-        }
-        .crack {
-            position: absolute;
-            background: rgba(255,0,0,0.8);
-            width: 2px;
-            height: 30px;
-            transform-origin: bottom;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        #crack1 { top: 20%; left: 40%; transform: rotate(30deg); }
-        #crack2 { top: 30%; right: 30%; transform: rotate(-20deg); }
-        #crack3 { bottom: 20%; left: 30%; transform: rotate(45deg); }
-        #time {
-            font-size: 36px; 
-            font-weight: bold;
-            margin: 10px; 
-        }
-        #fact {
-            font-size: 16px;
-            opacity: 0;
-            text-align: center;
-            animation: pop 3s forwards;
-            padding: 0 20px;
-            max-width: 100%;
-        }
-        @keyframes pop {
-            0% { opacity: 0; transform: scale(0.5); }
-            20% { opacity: 1; transform: scale(1.1); }
-            80% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0; transform: scale(1); }
-        }
-        button {
-            background: #ff5722;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px; 
-            border-radius: 50px;
-            margin: 10px;
-            cursor: pointer;
-            touch-action: manipulation;
-        }
-        #levels {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        #share {
-            background: #00ff88;
-        }
-        #splashScreen { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: #808080; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            z-index: 9999;
-        } 
-        #splashScreen img { 
-            max-width: 90%; 
-            max-height: 90%; 
-            width: 100%;
-            height: 100%;
-            object-fit: contain; 
-        } 
-        #splashScreen.hidden { 
-            display: none; 
-        }
-        
-        @media (max-width: 480px) {
-            #egg {
-                width: 120px;
-                height: 150px;
-            }
-            #time {
-                font-size: 32px;
-            }
-            button {
-                padding: 10px 20px;
-                font-size: 14px;
-            }
-            #fact {
-                font-size: 14px;
-            }
-        }
+        body { font-family: Arial, sans-serif; text-align: center; background: #fff; color: #333; margin: 0; padding: 20px; }
+        .screen { display: none; }
+        #splash { display: block; } /* Заставка показывается первой */
+        img { max-width: 100%; height: auto; }
+        .cards { display: flex; flex-wrap: wrap; justify-content: center; }
+        .card { width: 120px; margin: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 10px; cursor: pointer; }
+        .card img { width: 80px; }
+        #timer-screen h1 { font-size: 48px; }
+        button { padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; margin: 10px; }
+        #facts-screen ul { text-align: left; max-width: 300px; margin: 0 auto; }
     </style>
 </head>
 <body>
-    <div id="splashScreen">
-        <img src="splash.png.png" alt="Splash">
+    <!-- Заставка -->
+    <div id="splash" class="screen">
+        <img src="splash.png.png" alt="Заставка">
+        <p>Загрузка...</p>
     </div>
-    <div class="container">
-        <div id="egg" style="display: block;">
-            <img id="eggGif" src="timer.gif" alt="Boiling egg" style="max-width: 300px; height: auto; background: #f0f0f0; border-radius: 50%; padding: 20px;"> 
-            <div id="crack1" class="crack"></div>
-            <div id="crack2" class="crack"></div>
-            <div id="crack3" class="crack"></div>
+
+    <!-- Главный экран -->
+    <div id="main-screen" class="screen">
+        <h1>Выбери степень готовности 🥚</h1>
+        <div class="cards">
+            <div class="card" data-time="180" data-label="Всмятку"> <!-- 3 мин = 180 сек -->
+                <img src="https://thumbs.dreamstime.com/z/mastering-perfect-boiled-egg-visual-guide-to-hard-medium-soft-runny-yolks-undercooked-unlock-secrets-351443229.jpg" alt="Всмятку"> <!-- Замени на свою картинку -->
+                <p>Всмятку (3 мин)</p>
+            </div>
+            <div class="card" data-time="300" data-label="В мешочек">
+                <img src="https://www.ctvnews.ca/resizer/v2/EJE6Q2MLX5FAJMSYTSDR4OECFI.JPG?smart=true&auth=1a7fae6bb836f735b6fe5f5b440d9db9ba4ed6e2474495583d85df459e518c16&width=1200&height=630" alt="В мешочек"> <!-- Замени -->
+                <p>В мешочек (5 мин)</p>
+            </div>
+            <div class="card" data-time="480" data-label="Вкрутую">
+                <img src="http://i.imgur.com/RtQ9cG7.jpg" alt="Вкрутую"> <!-- Замени -->
+                <p>Вкрутую (8 мин)</p>
+            </div>
         </div>
-        <div id="time">03:00</div>
-        <div id="fact"></div>
-        <div id="levels">
-            <button onclick="setTime(180)">Вкрутую</button>
-            <button onclick="setTime(360)">Мешочек</button>
-            <button onclick="setTime(540)">Всмятку</button>
-        </div>
-        <button id="startBtn" onclick="toggleTimer()">Старт</button>
-        <button id="share" onclick="shareResult()" style="display:none;">Поделиться 🥚</button>
+        <button onclick="showFacts()">Факты и рецепты 📖</button>
     </div>
-    <audio id="music" loop src="https://www.soundjay.com/misc/sounds/boiling-water-1.mp3"></audio>
+
+    <!-- Экран таймера -->
+    <div id="timer-screen" class="screen">
+        <h2 id="timer-label"></h2>
+        <h1 id="timer-display">00:00</h1>
+        <img id="dancing-egg" src="dancing_egg.gif" alt="Танцующее яйцо" style="display: none; width: 200px;">
+        <button id="start-btn">Старт</button>
+        <button onclick="backToMain()">Назад</button>
+        <audio id="timer-audio" src="timer_sound.mp3" loop></audio> <!-- Звуковой файл -->
+    </div>
+
+    <!-- Страница фактов и рецептов -->
+    <div id="facts-screen" class="screen">
+        <h1>Интересные факты и рецепты 🥚</h1>
+        <h2>Факты:</h2>
+        <ul>
+            <li>Яйца — полный белок, содержащий все аминокислоты.</li>
+            <li>Цвет скорлупы зависит от породы курицы (белые или коричневые — одинаково полезны).</li>
+            <li>Самое большое яйцо в мире — 23 см в диаметре, снесено в 2010 году.</li>
+            <li>Яйца помогают усваивать витамины из овощей лучше.</li>
+            <li>В яйце желток — это одна огромная клетка!</li>
+        </ul>
+        <h2>Простые рецепты:</h2>
+        <ul>
+            <li><b>Яичница:</b> Разбей 2 яйца на сковороду, жарь 3 мин. Добавь соль.</li>
+            <li><b>Омлет:</b> Взбей 2 яйца с молоком, жарь с овощами 5 мин.</li>
+            <li><b>Пашот:</b> В кипящую воду с уксусом разбей яйцо, вари 3 мин.</li>
+            <li><b>Девилд яйца:</b> Свари вкрутую, разрежь, смешай желток с майонезом и специями.</li>
+        </ul>
+        <button onclick="backToMain()">Назад</button>
+    </div>
+
     <script>
-        let timeLeft = 180;
-        let isRunning = false;
-        let timer;
-        let factTimer;
-        const music = document.getElementById('music');
-        const facts = [
-            'Скорлупа имеет 17 000 пор! 🥚',
-            'Курица вертит яйцо до 50 раз в день.',
-            'Свежие яйца тонут в воде, старые всплывают.',
-            'Желток — почти половина жира и энергии яйца.',
-            'Яйца – один из лучших источников белка.'
-        ];
-        const egg = document.getElementById('egg');
-        const timeEl = document.getElementById('time');
-        const startBtn = document.getElementById('startBtn');
-        const cracks = document.querySelectorAll('.crack');
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
 
-        function updateDisplay() {
-            const mins = Math.floor(timeLeft / 60);
-            const secs = timeLeft % 60;
-            timeEl.textContent = 
-                mins.toString().padStart(2,'0') + ':' + 
-                secs.toString().padStart(2,'0');
-        }
+        // Показ заставки на 2 сек, потом главный экран
+        setTimeout(() => {
+            document.getElementById('splash').style.display = 'none';
+            document.getElementById('main-screen').style.display = 'block';
+        }, 2000);
 
-        function setTime(t) {
-            if (isRunning) return;
-            timeLeft = t;
-            updateDisplay();
-        }
-
-        function toggleTimer() {
-            if (!isRunning) {
-                isRunning = true;
-                startBtn.textContent = 'Стоп';
-                egg.classList.add('boil');
-                document.getElementById('eggGif').style.display = 'block';
-                timer = setInterval(() => {
-                    timeLeft--;
-                    egg.style.background = 'transparent';
-                    egg.style.opacity = '0';
-                    updateDisplay();
-                    if (timeLeft <= 0) {
-                        egg.style.overflow = 'visible';
-                        clearInterval(timer);
-                        clearInterval(factTimer);
-                        timeLeft = 0;
-                        updateDisplay();
-                        egg.classList.remove('boil');
-                        egg.classList.add('done');
-                        cracks.forEach(c => c.style.opacity = '1');
-                        music.pause();
-                        startBtn.style.display = 'none';
-                        document.getElementById('share').style.display = 'block';
-                        if (window.Telegram && Telegram.WebApp && Telegram.WebApp.HapticFeedback) {
-                            Telegram.WebApp.HapticFeedback.notificationOccurred('success');
-                        }
-                    }
-                }, 1000);
-                factTimer = setInterval(() => {
-                    const f = facts[Math.floor(Math.random() * facts.length)];
-                    const factEl = document.getElementById('fact');
-                    factEl.textContent = f;
-                    factEl.style.opacity = '1';
-                    setTimeout(() => factEl.style.opacity = '0', 3000);
-                }, 30000);
-            } else {
-                clearInterval(timer);
-                clearInterval(factTimer);
-                egg.classList.remove('boil', 'done');
-                document.getElementById('egg').style.display = 'block';
-                document.getElementById('eggGif').style.display = 'none';
-                cracks.forEach(c => c.style.opacity = '0');
-                music.pause();
-                egg.style.background = '';
-                egg.style.opacity = '1';
-                startBtn.textContent = 'Старт';
-                document.getElementById('share').style.display = 'none';
-            }
-            egg.style.overflow = '';
-        }
-
-        egg.addEventListener('pointerdown', () => {
-            if (isRunning) {
-                egg.style.animationDuration = '1s';
-                if (window.Telegram && Telegram.WebApp && Telegram.WebApp.HapticFeedback) {
-                    Telegram.WebApp.HapticFeedback.impactOccurred('light');
-                }
-                setTimeout(() => {
-                    egg.style.animationDuration = '2s';
-                }, 500);
-            }
+        // Карточки: клик открывает таймер
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', () => {
+                const time = card.dataset.time;
+                const label = card.dataset.label;
+                startTimer(time, label);
+            });
         });
 
-        function shareResult() {
-            const text = 'Я сварила яйца в egg_varilka_bot! Попробуй тоже 🥚';
-            if (window.Telegram && Telegram.WebApp && Telegram.WebApp.showShareMenu) {
-                Telegram.WebApp.showShareMenu({ text });
-            } else {
-                alert(text);
-            }
+        // Функция показа таймера
+        function startTimer(seconds, label) {
+            document.getElementById('main-screen').style.display = 'none';
+            document.getElementById('timer-screen').style.display = 'block';
+            document.getElementById('timer-label').innerText = label;
+            updateTimerDisplay(seconds);
+
+            const startBtn = document.getElementById('start-btn');
+            startBtn.onclick = () => {
+                const audio = document.getElementById('timer-audio');
+                audio.play();
+                document.getElementById('dancing-egg').style.display = 'block';
+
+                const interval = setInterval(() => {
+                    seconds--;
+                    updateTimerDisplay(seconds);
+                    if (seconds <= 0) {
+                        clearInterval(interval);
+                        audio.pause();
+                        document.getElementById('dancing-egg').style.display = 'none';
+                        Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+                        Telegram.WebApp.showAlert('Яйцо готово! 🥚');
+                        startBtn.innerText = 'Старт';
+                    }
+                }, 1000);
+            };
         }
 
-        if (window.Telegram && Telegram.WebApp) {
-            Telegram.WebApp.ready();
-            Telegram.WebApp.expand();
+        function updateTimerDisplay(seconds) {
+            const min = Math.floor(seconds / 60);
+            const sec = seconds % 60;
+            document.getElementById('timer-display').innerText = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
         }
 
-        updateDisplay();
-        setTimeout(() => { 
-            const splash = document.getElementById('splashScreen'); 
-            if (splash) splash.classList.add('hidden'); 
-        }, 3000);
+        function showFacts() {
+            document.getElementById('main-screen').style.display = 'none';
+            document.getElementById('facts-screen').style.display = 'block';
+        }
+
+        function backToMain() {
+            document.getElementById('timer-screen').style.display = 'none';
+            document.getElementById('facts-screen').style.display = 'none';
+            document.getElementById('main-screen').style.display = 'block';
+            document.getElementById('timer-audio').pause(); // Остановить звук
+        }
     </script>
 </body>
 </html>
