@@ -22,64 +22,61 @@
             width: 100vw;
         }
         button {
-            padding: 16px 32px;
+            padding: 14px 28px;
             background: #4CAF50;
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 1.4rem;
+            border-radius: 10px;
+            font-size: 1.3rem;
             cursor: pointer;
-            margin: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            margin: 10px;
         }
         .cards {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 24px;
-            padding: 24px;
+            gap: 20px;
+            padding: 20px;
         }
         .card {
-            width: 160px;
-            padding: 12px;
+            width: 150px;
+            padding: 10px;
             border: 1px solid #ddd;
-            border-radius: 16px;
+            border-radius: 14px;
             background: rgba(255,255,255,0.9);
             cursor: pointer;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
             color: #333;
         }
         .card img {
             width: 100%;
-            border-radius: 12px;
+            border-radius: 10px;
         }
         #timer-screen {
-            background: rgba(0,0,0,0.4) !important;
+            background: rgba(0,0,0,0.3) !important;
             position: relative;
         }
         #timer-label {
-            font-size: 2.8rem;
-            margin: 40px 0 10px;
-            text-shadow: 0 0 12px black;
+            font-size: 2.2rem;
+            margin: 30px 0 10px;
+            text-shadow: 0 0 10px black;
         }
         #timer-display {
-            font-size: 7rem;
+            font-size: 5.5rem;
             font-weight: bold;
-            margin: 20px 0;
-            text-shadow: 0 0 20px black;
+            margin: 15px 0;
+            text-shadow: 0 0 15px black;
         }
         #facts-screen ul {
             text-align: left;
             max-width: 90%;
-            margin: 24px auto;
-            padding-left: 24px;
-            font-size: 1.1rem;
+            margin: 20px auto;
+            padding-left: 20px;
         }
     </style>
 </head>
 <body>
 
-    <!-- Заставка на весь экран -->
+    <!-- Заставка -->
     <div id="splash" class="screen" style="
         position: fixed !important;
         inset: 0 !important;
@@ -89,41 +86,35 @@
         padding: 0 !important;
         background: #6a1b9a !important;
         display: flex !important;
-        flex-direction: column !important;
         justify-content: center !important;
         align-items: center !important;
         z-index: 9999 !important;
         overflow: hidden !important;
-        touch-action: none !important;
     ">
         <img 
             src="splash.gif.gif" 
-            alt="Анимированная заставка" 
+            alt="Splash" 
             style="
                 width: 100% !important;
                 height: 100% !important;
                 object-fit: cover !important;
-                object-position: center !important;
-                pointer-events: none !important;
+                position: absolute !important;
+                inset: 0 !important;
             "
         >
         <p style="
-            position: absolute !important;
-            bottom: 12% !important;
-            left: 50% !important;
-            transform: translateX(-50%) !important;
+            position: relative !important;
             color: #ffffff !important;
-            font-size: 2.4rem !important;
+            font-size: 2.8rem !important;
             font-weight: 900 !important;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
-            text-shadow: 0 4px 16px rgba(0,0,0,0.95) !important;
-            letter-spacing: 1.2px !important;
-            line-height: 1.15 !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+            text-shadow: 0 4px 20px rgba(0,0,0,1) !important;
             text-align: center !important;
-            max-width: 90% !important;
-            padding: 0 24px !important;
-            margin: 0 !important;
+            max-width: 85% !important;
+            line-height: 1.2 !important;
             z-index: 10 !important;
+            margin: 0 auto !important;
+            padding: 0 20px !important;
         ">
             Cook This Damn Egg Already
         </p>
@@ -131,28 +122,28 @@
 
     <!-- Главный экран -->
     <div id="main-screen" class="screen">
-        <h1 style="font-size: 2.5rem; margin: 40px 0; text-shadow: 0 0 10px black;">Choose Doneness Level 🥚</h1>
+        <h1 style="font-size: 2.2rem; margin: 30px 0;">Choose Doneness 🥚</h1>
         <div class="cards">
             <div class="card" data-time="180" data-label="Soft-Boiled">
                 <img src="https://thumbs.dreamstime.com/z/mastering-perfect-boiled-egg-visual-guide-to-hard-medium-soft-runny-yolks-undercooked-unlock-secrets-351443229.jpg" alt="Soft">
-                <p>Soft-Boiled (3 min)</p>
+                <p>Soft (3 min)</p>
             </div>
             <div class="card" data-time="300" data-label="Medium-Boiled">
                 <img src="https://cloudfront-us-east-1.images.arcpublishing.com/dmn/JQYAKXPMGHLT5BNFEGH4OTMQDI.jpg" alt="Medium">
-                <p>Medium-Boiled (5 min)</p>
+                <p>Medium (5 min)</p>
             </div>
             <div class="card" data-time="480" data-label="Hard-Boiled">
                 <img src="https://images.food52.com/AdTAVMopFsmbLPY0KZ-brHYB38c=/faa3522c-44b2-46ab-a9dd-1eea9904fc7b--Whitagram-Image_1.JPG" alt="Hard">
-                <p>Hard-Boiled (8 min)</p>
+                <p>Hard (8 min)</p>
             </div>
         </div>
-        <button onclick="showFacts()">Facts & Recipes 📖</button>
+        <button onclick="showFacts()">Facts & Recipes</button>
     </div>
 
-    <!-- Экран таймера с большой гифкой на весь фон -->
+    <!-- Таймер -->
     <div id="timer-screen" class="screen">
-        <h2 id="timer-label"></h2>
-        <h1 id="timer-display">00:00</h1>
+        <h2 id="timer-label" style="font-size: 2.2rem; margin: 30px 0 10px;"></h2>
+        <h1 id="timer-display" style="font-size: 5.5rem; margin: 15px 0;"></h1>
         
         <img 
             id="dancing-egg" 
@@ -160,18 +151,16 @@
             alt="Dancing Egg"
             style="
                 display: none;
-                position: fixed !important;
-                inset: 0 !important;
-                width: 100vw !important;
-                height: 100vh !important;
-                object-fit: contain !important;
-                object-position: center !important;
-                z-index: -1 !important;
-                pointer-events: none !important;
+                width: 80vw !important;
+                max-width: 400px !important;
+                height: auto !important;
+                margin: 20px auto !important;
+                border-radius: 20px !important;
+                box-shadow: 0 0 30px rgba(255,255,255,0.5) !important;
             "
         >
         
-        <div style="position: relative; z-index: 10; margin-top: auto; padding: 60px 20px;">
+        <div style="margin-top: auto; padding: 40px 20px;">
             <button id="start-btn">Start</button>
             <button onclick="backToMain()">Back</button>
         </div>
@@ -179,23 +168,23 @@
         <audio id="timer-audio" src="timer_sound.mp3" loop></audio>
     </div>
 
-    <!-- Факты и рецепты -->
+    <!-- Факты -->
     <div id="facts-screen" class="screen">
         <h1>Facts & Recipes 🥚</h1>
         <h2>Facts:</h2>
         <ul>
-            <li>Eggs are a complete protein containing all essential amino acids.</li>
-            <li>Shell color depends on the hen breed (white or brown — equally nutritious).</li>
-            <li>The world's largest egg was 23 cm in diameter, laid in 2010.</li>
-            <li>Eggs help your body absorb vitamins from vegetables better.</li>
-            <li>The yolk is actually one giant single cell!</li>
+            <li>Eggs are complete protein with all amino acids.</li>
+            <li>Shell color doesn't affect nutrition.</li>
+            <li>Largest egg ever: 23 cm diameter (2010).</li>
+            <li>Eggs boost vitamin absorption from veggies.</li>
+            <li>Yolk is one giant cell!</li>
         </ul>
-        <h2>Simple Recipes:</h2>
+        <h2>Recipes:</h2>
         <ul>
-            <li><b>Scrambled Eggs:</b> Crack 2 eggs into a pan, cook 3 min. Add salt.</li>
-            <li><b>Omelette:</b> Whisk 2 eggs with milk, fry with veggies for 5 min.</li>
-            <li><b>Poached:</b> Crack egg into boiling water with vinegar, cook 3 min.</li>
-            <li><b>Deviled Eggs:</b> Hard-boil, halve, mix yolk with mayo & spices.</li>
+            <li><b>Scrambled:</b> 2 eggs, pan, 3 min + salt.</li>
+            <li><b>Omelette:</b> Whisk with milk, fry veggies 5 min.</li>
+            <li><b>Poached:</b> Vinegar water, 3 min.</li>
+            <li><b>Deviled:</b> Hard-boil, mix yolk + mayo + spices.</li>
         </ul>
         <button onclick="backToMain()">Back</button>
     </div>
@@ -204,13 +193,11 @@
         Telegram.WebApp.ready();
         Telegram.WebApp.expand();
 
-        // Splash screen 3 seconds → main
         setTimeout(() => {
             document.getElementById('splash').style.display = 'none';
             document.getElementById('main-screen').style.display = 'block';
         }, 3000);
 
-        // Card click → timer
         document.querySelectorAll('.card').forEach(card => {
             card.addEventListener('click', () => {
                 const time = parseInt(card.dataset.time);
@@ -228,7 +215,7 @@
             const startBtn = document.getElementById('start-btn');
             startBtn.onclick = () => {
                 const audio = document.getElementById('timer-audio');
-                audio.play().catch(e => console.log("Audio error:", e));
+                audio.play().catch(() => {});
                 document.getElementById('dancing-egg').style.display = 'block';
 
                 const interval = setInterval(() => {
@@ -239,7 +226,7 @@
                         audio.pause();
                         document.getElementById('dancing-egg').style.display = 'none';
                         Telegram.WebApp.HapticFeedback.notificationOccurred('success');
-                        Telegram.WebApp.showAlert('Egg is ready! 🥚');
+                        Telegram.WebApp.showAlert('Egg ready! 🥚');
                         startBtn.innerText = 'Start';
                     }
                 }, 1000);
@@ -249,8 +236,7 @@
         function updateTimerDisplay(seconds) {
             const min = Math.floor(seconds / 60);
             const sec = seconds % 60;
-            document.getElementById('timer-display').innerText = 
-                `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+            document.getElementById('timer-display').innerText = `${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
         }
 
         function showFacts() {
