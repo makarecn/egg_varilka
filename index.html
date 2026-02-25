@@ -53,13 +53,17 @@
             overflow: hidden;
             box-shadow: 0 8px 20px rgba(0,0,0,0.4);
             transition: transform 0.2s;
+            aspect-ratio: 1 / 1;          /* делает ячейку квадратной */
+            background: #222;             /* тёмный фон пока грузится */
         }
         .stage:hover {
             transform: scale(1.05);
         }
         .stage img {
             width: 100%;
-            height: auto;
+            height: 100%;
+            object-fit: cover;            /* заполняет всю ячейку, обрезает лишнее */
+            object-position: center;
             display: block;
         }
         #timer-screen {
@@ -197,13 +201,11 @@
         Telegram.WebApp.ready();
         Telegram.WebApp.expand();
 
-        // Заставка → главный экран
         setTimeout(() => {
             document.getElementById('splash').style.display = 'none';
             document.getElementById('main-screen').style.display = 'flex';
         }, 3000);
 
-        // Клик по картинке → таймер
         document.querySelectorAll('.stage').forEach(stage => {
             stage.addEventListener('click', () => {
                 const time = parseInt(stage.dataset.time);
@@ -216,19 +218,17 @@
             document.getElementById('main-screen').style.display = 'none';
             document.getElementById('timer-screen').style.display = 'flex';
 
-            const timerLabel = document.getElementById('timer-label');
-            const timerDisplay = document.getElementById('timer-display');
-            const startBtn = document.getElementById('start-btn');
-            const audio = document.getElementById('timer-audio');
-            const dancingEgg = document.getElementById('dancing-egg');
-
-            timerLabel.innerText = label;
+            document.getElementById('timer-label').innerText = label;
             let seconds = initialSeconds;
             updateTimerDisplay(seconds);
 
+            const startBtn = document.getElementById('start-btn');
+            const audio = document.getElementById('timer-audio');
+            const egg = document.getElementById('dancing-egg');
+
             audio.pause();
             audio.currentTime = 0;
-            dancingEgg.style.display = 'none';
+            egg.style.display = 'none';
             startBtn.innerText = 'Старт';
             startBtn.disabled = false;
 
@@ -236,21 +236,18 @@
 
             startBtn.onclick = () => {
                 if (interval) return;
-
                 startBtn.innerText = 'Идёт...';
                 startBtn.disabled = true;
-                audio.play().catch(err => console.log("Audio blocked:", err));
-                dancingEgg.style.display = 'block';
+                audio.play().catch(() => {});
+                egg.style.display = 'block';
 
                 interval = setInterval(() => {
                     seconds--;
                     updateTimerDisplay(seconds);
-
                     if (seconds <= 0) {
                         clearInterval(interval);
-                        interval = null;
                         audio.pause();
-                        dancingEgg.style.display = 'none';
+                        egg.style.display = 'none';
                         Telegram.WebApp.HapticFeedback.notificationOccurred('success');
                         Telegram.WebApp.showAlert('Яйцо готово! 🥚');
                         startBtn.innerText = 'Старт';
@@ -264,7 +261,7 @@
             const min = Math.floor(seconds / 60);
             const sec = seconds % 60;
             document.getElementById('timer-display').innerText = 
-                `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+                `${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
         }
 
         function showFacts() {
