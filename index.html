@@ -86,39 +86,60 @@
             font-size: 1rem;
             line-height: 1.4;
         }
-        #splash {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #6a1b9a;
-        }
-        #splash img {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        #splash-text {
-            position: relative;
-            z-index: 10;
-            color: #ffcc00;
-            font-size: 2.4rem;
-            font-weight: 900;
-            text-shadow: 0 4px 15px rgba(0,0,0,0.9);
-            text-align: center;
-            max-width: 85%;
-            line-height: 1.2;
-        }
     </style>
 </head>
 <body>
 
-    <div id="splash" class="screen">
-        <img src="splash.gif.gif" alt="Splash">
-        <div id="splash-text">Готовим яйцо... 🥚</div>
+    <!-- Заставка с дерзкой надписью -->
+    <div id="splash" class="screen" style="
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #6a1b9a !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+        z-index: 9999 !important;
+        overflow: hidden !important;
+    ">
+        <img 
+            src="splash.gif.gif" 
+            alt="Splash" 
+            style="
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: cover !important;
+                position: absolute !important;
+                inset: 0 !important;
+            "
+        >
+        <div style="
+            position: relative !important;
+            z-index: 10 !important;
+            color: #ffcc00 !important;
+            background: linear-gradient(to bottom, #ffcc00, #ffb300) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            font-size: 2.6rem !important;
+            font-weight: 900 !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.85) !important;
+            text-align: center !important;
+            max-width: 90% !important;
+            line-height: 1.15 !important;
+            padding: 0 20px 60px !important;
+            margin-bottom: 10% !important;
+            letter-spacing: 1px !important;
+        ">
+            Cook This Damn Egg Already
+        </div>
     </div>
 
+    <!-- Главный экран -->
     <div id="main-screen" class="screen">
         <h1>Выбери степень готовности 🥚</h1>
         <div class="cards">
@@ -138,6 +159,7 @@
         <button onclick="showFacts()">Факты и рецепты 📖</button>
     </div>
 
+    <!-- Таймер -->
     <div id="timer-screen" class="screen">
         <h2 id="timer-label"></h2>
         <h1 id="timer-display">00:00</h1>
@@ -147,6 +169,7 @@
         <audio id="timer-audio" src="timer_sound.mp3" loop></audio>
     </div>
 
+    <!-- Факты и рецепты -->
     <div id="facts-screen" class="screen">
         <h1>Интересные факты и рецепты 🥚</h1>
         <h2>Факты:</h2>
@@ -187,11 +210,9 @@
         });
 
         function openTimer(initialSeconds, label) {
-            // Скрываем главный, показываем таймер
             document.getElementById('main-screen').style.display = 'none';
             document.getElementById('timer-screen').style.display = 'flex';
 
-            // Сбрасываем состояние таймера полностью
             const timerLabel = document.getElementById('timer-label');
             const timerDisplay = document.getElementById('timer-display');
             const startBtn = document.getElementById('start-btn');
@@ -210,10 +231,9 @@
 
             let interval = null;
 
-            // Удаляем старый обработчик (если был) и вешаем новый
-            startBtn.onclick = null; // очищаем предыдущий
+            startBtn.onclick = null;
             startBtn.onclick = () => {
-                if (interval) return; // уже идёт
+                if (interval) return;
 
                 startBtn.innerText = 'Идёт...';
                 startBtn.disabled = true;
@@ -254,7 +274,6 @@
             document.getElementById('timer-screen').style.display = 'none';
             document.getElementById('facts-screen').style.display = 'none';
             document.getElementById('main-screen').style.display = 'block';
-            // Дополнительно очищаем аудио и гифку
             document.getElementById('timer-audio').pause();
             document.getElementById('dancing-egg').style.display = 'none';
         }
