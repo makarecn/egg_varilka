@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Damn Egg Cooker 🥚</title>
+    <title>Варилка Яиц 🥚</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         html, body {
@@ -22,11 +22,6 @@
             width: 100%;
             box-sizing: border-box;
             padding: 10px;
-            overflow-y: auto; /* для фактов */
-        }
-        h1, h2 {
-            margin: 15px 0 10px;
-            text-shadow: 0 2px 8px black;
         }
         button {
             padding: 12px 28px;
@@ -36,6 +31,7 @@
             border-radius: 10px;
             font-size: 1.2rem;
             margin: 10px;
+            cursor: pointer;
         }
         .cards {
             display: flex;
@@ -105,11 +101,12 @@
         #splash-text {
             position: relative;
             z-index: 10;
-            font-size: 2.2rem;
+            color: #ffcc00;
+            font-size: 2.4rem;
             font-weight: 900;
-            text-shadow: 0 4px 15px black;
-            max-width: 90%;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.9);
             text-align: center;
+            max-width: 85%;
             line-height: 1.2;
         }
     </style>
@@ -118,66 +115,68 @@
 
     <div id="splash" class="screen">
         <img src="splash.gif.gif" alt="Splash">
-        <div id="splash-text">Cook This Damn Egg Already</div>
+        <div id="splash-text">Готовим яйцо... 🥚</div>
     </div>
 
     <div id="main-screen" class="screen">
-        <h1>Choose Doneness 🥚</h1>
+        <h1>Выбери степень готовности 🥚</h1>
         <div class="cards">
-            <div class="card" data-time="180" data-label="Soft-Boiled">
-                <img src="https://thumbs.dreamstime.com/z/mastering-perfect-boiled-egg-visual-guide-to-hard-medium-soft-runny-yolks-undercooked-unlock-secrets-351443229.jpg" alt="Soft">
-                <p>Soft (3 min)</p>
+            <div class="card" data-time="180" data-label="Всмятку">
+                <img src="https://thumbs.dreamstime.com/z/mastering-perfect-boiled-egg-visual-guide-to-hard-medium-soft-runny-yolks-undercooked-unlock-secrets-351443229.jpg" alt="Всмятку">
+                <p>Всмятку (3 мин)</p>
             </div>
-            <div class="card" data-time="300" data-label="Medium-Boiled">
-                <img src="https://cloudfront-us-east-1.images.arcpublishing.com/dmn/JQYAKXPMGHLT5BNFEGH4OTMQDI.jpg" alt="Medium">
-                <p>Medium (5 min)</p>
+            <div class="card" data-time="300" data-label="В мешочек">
+                <img src="https://cloudfront-us-east-1.images.arcpublishing.com/dmn/JQYAKXPMGHLT5BNFEGH4OTMQDI.jpg" alt="В мешочек">
+                <p>В мешочек (5 мин)</p>
             </div>
-            <div class="card" data-time="480" data-label="Hard-Boiled">
-                <img src="https://images.food52.com/AdTAVMopFsmbLPY0KZ-brHYB38c=/faa3522c-44b2-46ab-a9dd-1eea9904fc7b--Whitagram-Image_1.JPG" alt="Hard">
-                <p>Hard (8 min)</p>
+            <div class="card" data-time="480" data-label="Вкрутую">
+                <img src="https://images.food52.com/AdTAVMopFsmbLPY0KZ-brHYB38c=/faa3522c-44b2-46ab-a9dd-1eea9904fc7b--Whitagram-Image_1.JPG" alt="Вкрутую">
+                <p>Вкрутую (8 мин)</p>
             </div>
         </div>
-        <button onclick="showFacts()">Facts & Recipes</button>
+        <button onclick="showFacts()">Факты и рецепты 📖</button>
     </div>
 
     <div id="timer-screen" class="screen">
         <h2 id="timer-label"></h2>
         <h1 id="timer-display">00:00</h1>
-        <img id="dancing-egg" src="dancing_egg.gif.gif" alt="Dancing Egg" style="display: none;">
-        <button id="start-btn">Start</button>
-        <button onclick="backToMain()">Back</button>
+        <img id="dancing-egg" src="dancing_egg.gif.gif" alt="Танцующее яйцо" style="display: none;">
+        <button id="start-btn">Старт</button>
+        <button onclick="backToMain()">Назад</button>
         <audio id="timer-audio" src="timer_sound.mp3" loop></audio>
     </div>
 
     <div id="facts-screen" class="screen">
-        <h1>Facts & Recipes 🥚</h1>
-        <h2>Facts:</h2>
+        <h1>Интересные факты и рецепты 🥚</h1>
+        <h2>Факты:</h2>
         <ul>
-            <li>Eggs are complete protein with all amino acids.</li>
-            <li>Shell color doesn't affect nutrition.</li>
-            <li>Largest egg: 23 cm diameter (2010).</li>
-            <li>Eggs boost vitamin absorption.</li>
-            <li>Yolk is one giant cell!</li>
+            <li>Яйца — полный белок, содержащий все аминокислоты.</li>
+            <li>Цвет скорлупы зависит от породы курицы (белые или коричневые — одинаково полезны).</li>
+            <li>Самое большое яйцо в мире — 23 см в диаметре, снесено в 2010 году.</li>
+            <li>Яйца помогают усваивать витамины из овощей лучше.</li>
+            <li>В яйце желток — это одна огромная клетка!</li>
         </ul>
-        <h2>Recipes:</h2>
+        <h2>Простые рецепты:</h2>
         <ul>
-            <li><b>Scrambled:</b> 2 eggs, 3 min + salt.</li>
-            <li><b>Omelette:</b> Whisk with milk, fry 5 min.</li>
-            <li><b>Poached:</b> Vinegar water, 3 min.</li>
-            <li><b>Deviled:</b> Hard-boil, mix yolk + mayo.</li>
+            <li><b>Яичница:</b> Разбей 2 яйца на сковороду, жарь 3 мин. Добавь соль.</li>
+            <li><b>Омлет:</b> Взбей 2 яйца с молоком, жарь с овощами 5 мин.</li>
+            <li><b>Пашот:</b> В кипящую воду с уксусом разбей яйцо, вари 3 мин.</li>
+            <li><b>Девилд яйца:</b> Свари вкрутую, разрежь, смешай желток с майонезом и специями.</li>
         </ul>
-        <button onclick="backToMain()">Back</button>
+        <button onclick="backToMain()">Назад</button>
     </div>
 
     <script>
         Telegram.WebApp.ready();
         Telegram.WebApp.expand();
 
+        // Заставка → главный экран через 3 секунды
         setTimeout(() => {
             document.getElementById('splash').style.display = 'none';
             document.getElementById('main-screen').style.display = 'block';
         }, 3000);
 
+        // Клик по карточке → запуск таймера
         document.querySelectorAll('.card').forEach(card => {
             card.addEventListener('click', () => {
                 const time = parseInt(card.dataset.time);
@@ -186,28 +185,44 @@
             });
         });
 
-        function startTimer(seconds, label) {
+        function startTimer(initialSeconds, label) {
             document.getElementById('main-screen').style.display = 'none';
             document.getElementById('timer-screen').style.display = 'flex';
             document.getElementById('timer-label').innerText = label;
+            let seconds = initialSeconds;
             updateTimerDisplay(seconds);
 
             const startBtn = document.getElementById('start-btn');
-            startBtn.onclick = () => {
-                const audio = document.getElementById('timer-audio');
-                audio.play().catch(() => {});
-                document.getElementById('dancing-egg').style.display = 'block';
+            const audio = document.getElementById('timer-audio');
+            const dancingEgg = document.getElementById('dancing-egg');
 
-                const interval = setInterval(() => {
+            // Сбрасываем состояние
+            startBtn.innerText = 'Старт';
+            audio.pause();
+            audio.currentTime = 0;
+            dancingEgg.style.display = 'none';
+
+            let interval = null;
+
+            startBtn.onclick = () => {
+                if (interval) return; // уже запущен
+
+                startBtn.innerText = 'Идёт...';
+                audio.play().catch(err => console.log("Audio play prevented:", err));
+                dancingEgg.style.display = 'block';
+
+                interval = setInterval(() => {
                     seconds--;
                     updateTimerDisplay(seconds);
+
                     if (seconds <= 0) {
                         clearInterval(interval);
+                        interval = null;
                         audio.pause();
-                        document.getElementById('dancing-egg').style.display = 'none';
+                        dancingEgg.style.display = 'none';
                         Telegram.WebApp.HapticFeedback.notificationOccurred('success');
-                        Telegram.WebApp.showAlert('Egg ready! 🥚');
-                        startBtn.innerText = 'Start';
+                        Telegram.WebApp.showAlert('Яйцо готово! 🥚');
+                        startBtn.innerText = 'Старт';
                     }
                 }, 1000);
             };
@@ -216,7 +231,8 @@
         function updateTimerDisplay(seconds) {
             const min = Math.floor(seconds / 60);
             const sec = seconds % 60;
-            document.getElementById('timer-display').innerText = `${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+            document.getElementById('timer-display').innerText = 
+                `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
         }
 
         function showFacts() {
