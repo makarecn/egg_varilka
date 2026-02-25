@@ -21,8 +21,6 @@
             height: 100%;
             width: 100%;
             box-sizing: border-box;
-            padding: 10px;
-            overflow-y: auto;
         }
         button {
             padding: 12px 28px;
@@ -34,25 +32,35 @@
             margin: 10px;
             cursor: pointer;
         }
-        .cards {
+        #main-screen {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             justify-content: center;
-            gap: 15px;
-            padding: 15px 0;
+            align-items: center;
+            padding: 20px;
+            gap: 25px;
         }
-        .card {
-            width: 130px;
-            padding: 8px;
-            border-radius: 12px;
-            background: rgba(255,255,255,0.85);
-            cursor: pointer;
-            color: #333;
-            font-size: 0.9rem;
-        }
-        .card img {
+        .stages-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
             width: 100%;
-            border-radius: 8px;
+            max-width: 500px;
+        }
+        .stage {
+            cursor: pointer;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            transition: transform 0.2s;
+        }
+        .stage:hover {
+            transform: scale(1.05);
+        }
+        .stage img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
         #timer-screen {
             display: flex;
@@ -62,222 +70,87 @@
             background: rgba(0,0,0,0.3);
         }
         #timer-label {
-            font-size: 1.8rem;
+            font-size: 2rem;
             margin: 10px 0;
         }
         #timer-display {
-            font-size: 4.5rem;
+            font-size: 5rem;
             font-weight: bold;
             margin: 10px 0;
-            letter-spacing: 4px;
         }
         #dancing-egg {
             max-width: 70vw;
             max-height: 40vh;
-            margin: 15px auto;
+            margin: 20px auto;
             border-radius: 20px;
             box-shadow: 0 0 25px rgba(255,255,255,0.6);
+        }
+        #facts-screen {
+            padding: 20px;
+            overflow-y: auto;
         }
         #facts-screen ul {
             text-align: left;
             max-width: 90%;
             margin: 15px auto;
             padding-left: 20px;
-            font-size: 1rem;
-            line-height: 1.4;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+        #splash {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            background: #6a1b9a;
+        }
+        #splash img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        #splash-text {
+            position: relative;
+            z-index: 10;
+            color: #ffcc00;
+            background: linear-gradient(to bottom, #ffcc00, #ffb300);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.6rem;
+            font-weight: 900;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            text-shadow: none;
+            text-align: center;
+            max-width: 90%;
+            line-height: 1.15;
+            padding: 0 20px 80px;
+            margin-bottom: 15%;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
 
-    <!-- Заставка с дерзкой надписью -->
-   <!-- Заставка -->
-<div id="splash" class="screen" style="
-    position: fixed !important;
-    inset: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    background: #6a1b9a !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-end !important;
-    align-items: center !important;
-    z-index: 9999 !important;
-    overflow: hidden !important;
-">
-    <img 
-        src="splash.gif.gif" 
-        alt="Splash" 
-        style="
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: cover !important;
-            position: absolute !important;
-            inset: 0 !important;
-        "
-    >
-    <div style="
-        position: relative !important;
-        z-index: 10 !important;
-        color: #ffcc00 !important;
-        background: linear-gradient(to bottom, #ffcc00, #ffb300) !important;
-        -webkit-background-clip: text !important;
-        -webkit-text-fill-color: transparent !important;
-        font-size: 2.6rem !important;
-        font-weight: 900 !important;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-        text-shadow: none !important;                  /* убрана тень */
-        text-align: center !important;
-        max-width: 90% !important;
-        line-height: 1.15 !important;
-        padding: 0 20px 80px !important;               /* больше отступа снизу */
-        margin-bottom: 15% !important;                 /* текст ещё ниже */
-        letter-spacing: 1px !important;
-    ">
-        Cook This Damn Egg Already
+    <!-- Заставка -->
+    <div id="splash" class="screen">
+        <img src="splash.gif.gif" alt="Splash">
+        <div id="splash-text">Cook This Damn Egg Already</div>
     </div>
-</div>
 
-    <!-- Главный экран -->
+    <!-- Главный экран: 6 видов желтка без надписей -->
     <div id="main-screen" class="screen">
-        <h1>Выбери степень готовности 🥚</h1>
-        <div class="cards">
-            <div class="card" data-time="180" data-label="Всмятку">
-                <img src="https://thumbs.dreamstime.com/z/mastering-perfect-boiled-egg-visual-guide-to-hard-medium-soft-runny-yolks-undercooked-unlock-secrets-351443229.jpg" alt="Всмятку">
-                <p>Всмятку (3 мин)</p>
+        <div class="stages-grid">
+            <!-- 1. Очень жидкий ~2 мин -->
+            <div class="stage" data-time="120">
+                <img src="https://images.unsplash.com/photo-1606857521015-7f9fcf423740?w=800" alt="Очень жидкий">
             </div>
-            <div class="card" data-time="300" data-label="В мешочек">
-                <img src="https://cloudfront-us-east-1.images.arcpublishing.com/dmn/JQYAKXPMGHLT5BNFEGH4OTMQDI.jpg" alt="В мешочек">
-                <p>В мешочек (5 мин)</p>
+
+            <!-- 2. Жидкий всмятку ~3 мин -->
+            <div class="stage" data-time="180">
+                <img src="https://feelgoodfoodie.net/wp-content/uploads/2020/11/how-to-boil-eggs-Soft-Medium-Hard.jpg" alt="Всмятку">
             </div>
-            <div class="card" data-time="480" data-label="Вкрутую">
-                <img src="https://images.food52.com/AdTAVMopFsmbLPY0KZ-brHYB38c=/faa3522c-44b2-46ab-a9dd-1eea9904fc7b--Whitagram-Image_1.JPG" alt="Вкрутую">
-                <p>Вкрутую (8 мин)</p>
-            </div>
-        </div>
-        <button onclick="showFacts()">Факты и рецепты 📖</button>
-    </div>
-
-    <!-- Таймер -->
-    <div id="timer-screen" class="screen">
-        <h2 id="timer-label"></h2>
-        <h1 id="timer-display">00:00</h1>
-        <img id="dancing-egg" src="dancing_egg.gif.gif" alt="Танцующее яйцо" style="display: none;">
-        <button id="start-btn">Старт</button>
-        <button onclick="backToMain()">Назад</button>
-        <audio id="timer-audio" src="timer_sound.mp3" loop></audio>
-    </div>
-
-    <!-- Факты и рецепты -->
-    <div id="facts-screen" class="screen">
-        <h1>Интересные факты и рецепты 🥚</h1>
-        <h2>Факты:</h2>
-        <ul>
-            <li>Яйца — полный белок, содержащий все аминокислоты.</li>
-            <li>Цвет скорлупы зависит от породы курицы (белые или коричневые — одинаково полезны).</li>
-            <li>Самое большое яйцо в мире — 23 см в диаметре, снесено в 2010 году.</li>
-            <li>Яйца помогают усваивать витамины из овощей лучше.</li>
-            <li>В яйце желток — это одна огромная клетка!</li>
-        </ul>
-        <h2>Простые рецепты:</h2>
-        <ul>
-            <li><b>Яичница:</b> Разбей 2 яйца на сковороду, жарь 3 мин. Добавь соль.</li>
-            <li><b>Омлет:</b> Взбей 2 яйца с молоком, жарь с овощами 5 мин.</li>
-            <li><b>Пашот:</b> В кипящую воду с уксусом разбей яйцо, вари 3 мин.</li>
-            <li><b>Девилд яйца:</b> Свари вкрутую, разрежь, смешай желток с майонезом и специями.</li>
-        </ul>
-        <button onclick="backToMain()">Назад</button>
-    </div>
-
-    <script>
-        Telegram.WebApp.ready();
-        Telegram.WebApp.expand();
-
-        // Заставка → главный экран
-        setTimeout(() => {
-            document.getElementById('splash').style.display = 'none';
-            document.getElementById('main-screen').style.display = 'block';
-        }, 3000);
-
-        // Клик по карточке → таймер
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('click', () => {
-                const time = parseInt(card.dataset.time);
-                const label = card.dataset.label;
-                openTimer(time, label);
-            });
-        });
-
-        function openTimer(initialSeconds, label) {
-            document.getElementById('main-screen').style.display = 'none';
-            document.getElementById('timer-screen').style.display = 'flex';
-
-            const timerLabel = document.getElementById('timer-label');
-            const timerDisplay = document.getElementById('timer-display');
-            const startBtn = document.getElementById('start-btn');
-            const audio = document.getElementById('timer-audio');
-            const dancingEgg = document.getElementById('dancing-egg');
-
-            timerLabel.innerText = label;
-            let seconds = initialSeconds;
-            updateTimerDisplay(seconds);
-
-            audio.pause();
-            audio.currentTime = 0;
-            dancingEgg.style.display = 'none';
-            startBtn.innerText = 'Старт';
-            startBtn.disabled = false;
-
-            let interval = null;
-
-            startBtn.onclick = null;
-            startBtn.onclick = () => {
-                if (interval) return;
-
-                startBtn.innerText = 'Идёт...';
-                startBtn.disabled = true;
-                audio.play().catch(err => console.log("Audio blocked:", err));
-                dancingEgg.style.display = 'block';
-
-                interval = setInterval(() => {
-                    seconds--;
-                    updateTimerDisplay(seconds);
-
-                    if (seconds <= 0) {
-                        clearInterval(interval);
-                        interval = null;
-                        audio.pause();
-                        dancingEgg.style.display = 'none';
-                        Telegram.WebApp.HapticFeedback.notificationOccurred('success');
-                        Telegram.WebApp.showAlert('Яйцо готово! 🥚');
-                        startBtn.innerText = 'Старт';
-                        startBtn.disabled = false;
-                    }
-                }, 1000);
-            };
-        }
-
-        function updateTimerDisplay(seconds) {
-            const min = Math.floor(seconds / 60);
-            const sec = seconds % 60;
-            document.getElementById('timer-display').innerText = 
-                `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
-        }
-
-        function showFacts() {
-            document.getElementById('main-screen').style.display = 'none';
-            document.getElementById('facts-screen').style.display = 'block';
-        }
-
-        function backToMain() {
-            document.getElementById('timer-screen').style.display = 'none';
-            document.getElementById('facts-screen').style.display = 'none';
-            document.getElementById('main-screen').style.display = 'block';
-            document.getElementById('timer-audio').pause();
-            document.getElementById('dancing-egg').style.display = 'none';
-        }
-    </script>
-</body>
-</html>
+            <!-- 3. Полужидкий ~4 мин -->
+            <div class="stage" data-time="240">
+                <img src="https://www.seriouseats.com/thmb/3k3G8r0j4c2j5y5y5y5y5y5y5y5=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/soft-boiled-eggs-hero-2-2-2-2
