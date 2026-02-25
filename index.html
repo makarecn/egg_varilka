@@ -1,128 +1,128 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
-    <title>Egg Damn Cooker 🥚</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Damn Egg Cooker 🥚</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         html, body {
-            margin: 0 !important;
-            padding: 0 !important;
-            height: 100% !important;
-            overflow: hidden !important;
-            background: #6a1b9a !important;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: #6a1b9a;
             font-family: Arial, sans-serif;
             color: #fff;
             text-align: center;
         }
         .screen {
             display: none;
-            height: 100vh;
-            width: 100vw;
+            height: 100%;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            overflow-y: auto; /* для фактов */
+        }
+        h1, h2 {
+            margin: 15px 0 10px;
+            text-shadow: 0 2px 8px black;
         }
         button {
-            padding: 14px 28px;
+            padding: 12px 28px;
             background: #4CAF50;
             color: white;
             border: none;
             border-radius: 10px;
-            font-size: 1.3rem;
-            cursor: pointer;
+            font-size: 1.2rem;
             margin: 10px;
         }
         .cards {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 20px;
-            padding: 20px;
+            gap: 15px;
+            padding: 15px 0;
         }
         .card {
-            width: 150px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 14px;
-            background: rgba(255,255,255,0.9);
+            width: 130px;
+            padding: 8px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.85);
             cursor: pointer;
             color: #333;
+            font-size: 0.9rem;
         }
         .card img {
             width: 100%;
-            border-radius: 10px;
+            border-radius: 8px;
         }
         #timer-screen {
-            background: rgba(0,0,0,0.3) !important;
-            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.3);
         }
         #timer-label {
-            font-size: 2.2rem;
-            margin: 30px 0 10px;
-            text-shadow: 0 0 10px black;
+            font-size: 1.8rem;
+            margin: 10px 0;
         }
         #timer-display {
-            font-size: 5.5rem;
+            font-size: 4.5rem;
             font-weight: bold;
-            margin: 15px 0;
-            text-shadow: 0 0 15px black;
+            margin: 10px 0;
+            letter-spacing: 4px;
+        }
+        #dancing-egg {
+            max-width: 70vw;
+            max-height: 40vh;
+            margin: 15px auto;
+            border-radius: 20px;
+            box-shadow: 0 0 25px rgba(255,255,255,0.6);
         }
         #facts-screen ul {
             text-align: left;
             max-width: 90%;
-            margin: 20px auto;
+            margin: 15px auto;
             padding-left: 20px;
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+        #splash {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #6a1b9a;
+        }
+        #splash img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        #splash-text {
+            position: relative;
+            z-index: 10;
+            font-size: 2.2rem;
+            font-weight: 900;
+            text-shadow: 0 4px 15px black;
+            max-width: 90%;
+            text-align: center;
+            line-height: 1.2;
         }
     </style>
 </head>
 <body>
 
-    <!-- Заставка -->
-    <div id="splash" class="screen" style="
-        position: fixed !important;
-        inset: 0 !important;
-        width: 100vw !important;
-        height: 100vh !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        background: #6a1b9a !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        z-index: 9999 !important;
-        overflow: hidden !important;
-    ">
-        <img 
-            src="splash.gif.gif" 
-            alt="Splash" 
-            style="
-                width: 100% !important;
-                height: 100% !important;
-                object-fit: cover !important;
-                position: absolute !important;
-                inset: 0 !important;
-            "
-        >
-        <p style="
-            position: relative !important;
-            color: #ffffff !important;
-            font-size: 2.8rem !important;
-            font-weight: 900 !important;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-            text-shadow: 0 4px 20px rgba(0,0,0,1) !important;
-            text-align: center !important;
-            max-width: 85% !important;
-            line-height: 1.2 !important;
-            z-index: 10 !important;
-            margin: 0 auto !important;
-            padding: 0 20px !important;
-        ">
-            Cook This Damn Egg Already
-        </p>
+    <div id="splash" class="screen">
+        <img src="splash.gif.gif" alt="Splash">
+        <div id="splash-text">Cook This Damn Egg Already</div>
     </div>
 
-    <!-- Главный экран -->
     <div id="main-screen" class="screen">
-        <h1 style="font-size: 2.2rem; margin: 30px 0;">Choose Doneness 🥚</h1>
+        <h1>Choose Doneness 🥚</h1>
         <div class="cards">
             <div class="card" data-time="180" data-label="Soft-Boiled">
                 <img src="https://thumbs.dreamstime.com/z/mastering-perfect-boiled-egg-visual-guide-to-hard-medium-soft-runny-yolks-undercooked-unlock-secrets-351443229.jpg" alt="Soft">
@@ -140,51 +140,31 @@
         <button onclick="showFacts()">Facts & Recipes</button>
     </div>
 
-    <!-- Таймер -->
     <div id="timer-screen" class="screen">
-        <h2 id="timer-label" style="font-size: 2.2rem; margin: 30px 0 10px;"></h2>
-        <h1 id="timer-display" style="font-size: 5.5rem; margin: 15px 0;"></h1>
-        
-        <img 
-            id="dancing-egg" 
-            src="dancing_egg.gif.gif" 
-            alt="Dancing Egg"
-            style="
-                display: none;
-                width: 80vw !important;
-                max-width: 400px !important;
-                height: auto !important;
-                margin: 20px auto !important;
-                border-radius: 20px !important;
-                box-shadow: 0 0 30px rgba(255,255,255,0.5) !important;
-            "
-        >
-        
-        <div style="margin-top: auto; padding: 40px 20px;">
-            <button id="start-btn">Start</button>
-            <button onclick="backToMain()">Back</button>
-        </div>
-        
+        <h2 id="timer-label"></h2>
+        <h1 id="timer-display">00:00</h1>
+        <img id="dancing-egg" src="dancing_egg.gif.gif" alt="Dancing Egg" style="display: none;">
+        <button id="start-btn">Start</button>
+        <button onclick="backToMain()">Back</button>
         <audio id="timer-audio" src="timer_sound.mp3" loop></audio>
     </div>
 
-    <!-- Факты -->
     <div id="facts-screen" class="screen">
         <h1>Facts & Recipes 🥚</h1>
         <h2>Facts:</h2>
         <ul>
             <li>Eggs are complete protein with all amino acids.</li>
             <li>Shell color doesn't affect nutrition.</li>
-            <li>Largest egg ever: 23 cm diameter (2010).</li>
-            <li>Eggs boost vitamin absorption from veggies.</li>
+            <li>Largest egg: 23 cm diameter (2010).</li>
+            <li>Eggs boost vitamin absorption.</li>
             <li>Yolk is one giant cell!</li>
         </ul>
         <h2>Recipes:</h2>
         <ul>
-            <li><b>Scrambled:</b> 2 eggs, pan, 3 min + salt.</li>
-            <li><b>Omelette:</b> Whisk with milk, fry veggies 5 min.</li>
+            <li><b>Scrambled:</b> 2 eggs, 3 min + salt.</li>
+            <li><b>Omelette:</b> Whisk with milk, fry 5 min.</li>
             <li><b>Poached:</b> Vinegar water, 3 min.</li>
-            <li><b>Deviled:</b> Hard-boil, mix yolk + mayo + spices.</li>
+            <li><b>Deviled:</b> Hard-boil, mix yolk + mayo.</li>
         </ul>
         <button onclick="backToMain()">Back</button>
     </div>
@@ -208,7 +188,7 @@
 
         function startTimer(seconds, label) {
             document.getElementById('main-screen').style.display = 'none';
-            document.getElementById('timer-screen').style.display = 'block';
+            document.getElementById('timer-screen').style.display = 'flex';
             document.getElementById('timer-label').innerText = label;
             updateTimerDisplay(seconds);
 
