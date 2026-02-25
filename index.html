@@ -91,53 +91,54 @@
 <body>
 
     <!-- Заставка с дерзкой надписью -->
-    <div id="splash" class="screen" style="
-        position: fixed !important;
-        inset: 0 !important;
-        width: 100vw !important;
-        height: 100vh !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        background: #6a1b9a !important;
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: flex-end !important;
-        align-items: center !important;
-        z-index: 9999 !important;
-        overflow: hidden !important;
+   <!-- Заставка -->
+<div id="splash" class="screen" style="
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #6a1b9a !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    z-index: 9999 !important;
+    overflow: hidden !important;
+">
+    <img 
+        src="splash.gif.gif" 
+        alt="Splash" 
+        style="
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            position: absolute !important;
+            inset: 0 !important;
+        "
+    >
+    <div style="
+        position: relative !important;
+        z-index: 10 !important;
+        color: #ffcc00 !important;
+        background: linear-gradient(to bottom, #ffcc00, #ffb300) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        font-size: 2.6rem !important;
+        font-weight: 900 !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        text-shadow: none !important;                  /* убрана тень */
+        text-align: center !important;
+        max-width: 90% !important;
+        line-height: 1.15 !important;
+        padding: 0 20px 80px !important;               /* больше отступа снизу */
+        margin-bottom: 15% !important;                 /* текст ещё ниже */
+        letter-spacing: 1px !important;
     ">
-        <img 
-            src="splash.gif.gif" 
-            alt="Splash" 
-            style="
-                width: 100% !important;
-                height: 100% !important;
-                object-fit: cover !important;
-                position: absolute !important;
-                inset: 0 !important;
-            "
-        >
-        <div style="
-            position: relative !important;
-            z-index: 10 !important;
-            color: #ffcc00 !important;
-            background: linear-gradient(to bottom, #ffcc00, #ffb300) !important;
-            -webkit-background-clip: text !important;
-            -webkit-text-fill-color: transparent !important;
-            font-size: 2.6rem !important;
-            font-weight: 900 !important;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-            text-shadow: 0 4px 12px rgba(0,0,0,0.85) !important;
-            text-align: center !important;
-            max-width: 90% !important;
-            line-height: 1.15 !important;
-            padding: 0 20px 60px !important;
-            margin-bottom: 10% !important;
-            letter-spacing: 1px !important;
-        ">
-            Cook This Damn Egg Already
-        </div>
+        Cook This Damn Egg Already
     </div>
+</div>
 
     <!-- Главный экран -->
     <div id="main-screen" class="screen">
