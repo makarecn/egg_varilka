@@ -22,6 +22,7 @@
             width: 100%;
             box-sizing: border-box;
             padding: 10px;
+            overflow-y: auto;
         }
         button {
             padding: 12px 28px;
@@ -170,45 +171,53 @@
         Telegram.WebApp.ready();
         Telegram.WebApp.expand();
 
-        // Заставка → главный экран через 3 секунды
+        // Заставка → главный экран
         setTimeout(() => {
             document.getElementById('splash').style.display = 'none';
             document.getElementById('main-screen').style.display = 'block';
         }, 3000);
 
-        // Клик по карточке → запуск таймера
+        // Клик по карточке → таймер
         document.querySelectorAll('.card').forEach(card => {
             card.addEventListener('click', () => {
                 const time = parseInt(card.dataset.time);
                 const label = card.dataset.label;
-                startTimer(time, label);
+                openTimer(time, label);
             });
         });
 
-        function startTimer(initialSeconds, label) {
+        function openTimer(initialSeconds, label) {
+            // Скрываем главный, показываем таймер
             document.getElementById('main-screen').style.display = 'none';
             document.getElementById('timer-screen').style.display = 'flex';
-            document.getElementById('timer-label').innerText = label;
-            let seconds = initialSeconds;
-            updateTimerDisplay(seconds);
 
+            // Сбрасываем состояние таймера полностью
+            const timerLabel = document.getElementById('timer-label');
+            const timerDisplay = document.getElementById('timer-display');
             const startBtn = document.getElementById('start-btn');
             const audio = document.getElementById('timer-audio');
             const dancingEgg = document.getElementById('dancing-egg');
 
-            // Сбрасываем состояние
-            startBtn.innerText = 'Старт';
+            timerLabel.innerText = label;
+            let seconds = initialSeconds;
+            updateTimerDisplay(seconds);
+
             audio.pause();
             audio.currentTime = 0;
             dancingEgg.style.display = 'none';
+            startBtn.innerText = 'Старт';
+            startBtn.disabled = false;
 
             let interval = null;
 
+            // Удаляем старый обработчик (если был) и вешаем новый
+            startBtn.onclick = null; // очищаем предыдущий
             startBtn.onclick = () => {
-                if (interval) return; // уже запущен
+                if (interval) return; // уже идёт
 
                 startBtn.innerText = 'Идёт...';
-                audio.play().catch(err => console.log("Audio play prevented:", err));
+                startBtn.disabled = true;
+                audio.play().catch(err => console.log("Audio blocked:", err));
                 dancingEgg.style.display = 'block';
 
                 interval = setInterval(() => {
@@ -223,6 +232,7 @@
                         Telegram.WebApp.HapticFeedback.notificationOccurred('success');
                         Telegram.WebApp.showAlert('Яйцо готово! 🥚');
                         startBtn.innerText = 'Старт';
+                        startBtn.disabled = false;
                     }
                 }, 1000);
             };
@@ -244,6 +254,7 @@
             document.getElementById('timer-screen').style.display = 'none';
             document.getElementById('facts-screen').style.display = 'none';
             document.getElementById('main-screen').style.display = 'block';
+            // Дополнительно очищаем аудио и гифку
             document.getElementById('timer-audio').pause();
             document.getElementById('dancing-egg').style.display = 'none';
         }
