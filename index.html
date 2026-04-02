@@ -1,122 +1,195 @@
-<script>
-    Telegram.WebApp.ready();
-    Telegram.WebApp.expand();
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Варилка Яиц 🥚</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: #6a1b9a;
+            font-family: Arial, sans-serif;
+            color: #fff;
+            text-align: center;
+        }
+        .screen { display: none; height: 100%; width: 100%; box-sizing: border-box; }
+        button {
+            padding: 14px 32px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.3rem;
+            margin: 12px;
+        }
+        #main-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; gap: 25px; }
+        .stages-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            width: 100%;
+            max-width: 520px;
+        }
+        .stage {
+            cursor: pointer;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+        .stage img { width: 100%; height: 100%; object-fit: cover; }
+        #timer-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        #timer-display {
+            font-size: 6rem;
+            font-weight: bold;
+            margin: 20px 0;
+            font-family: monospace;
+        }
+        #dancing-egg {
+            max-width: 75vw;
+            max-height: 38vh;
+            margin: 20px 0;
+            border-radius: 20px;
+        }
+        #splash {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            background: #6a1b9a;
+        }
+        #splash img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+        #splash-text {
+            position: relative;
+            z-index: 10;
+            color: #ffcc00;
+            font-size: 2.6rem;
+            font-weight: 900;
+            padding-bottom: 100px;
+        }
+    </style>
+</head>
+<body>
 
-    let timerInterval = null;
-    let endTime = 0;           // точное время, когда таймер должен закончиться
-    let isRunning = false;
+    <!-- Заставка -->
+    <div id="splash" class="screen">
+        <img src="splash.gif.gif" alt="Splash">
+        <div id="splash-text">Cook This Damn Egg Already</div>
+    </div>
 
-    // Заставка
-    setTimeout(() => {
-        document.getElementById('splash').style.display = 'none';
-        document.getElementById('main-screen').style.display = 'flex';
-    }, 2500);
+    <!-- Главный экран -->
+    <div id="main-screen" class="screen">
+        <div class="stages-grid">
+            <div class="stage" data-time="120"><img src="eggs1.jpg.png" alt=""></div>
+            <div class="stage" data-time="180"><img src="eggs2.jpg.png" alt=""></div>
+            <div class="stage" data-time="240"><img src="eggs3.jpg.png" alt=""></div>
+            <div class="stage" data-time="360"><img src="eggs4.jpg.png" alt=""></div>
+            <div class="stage" data-time="480"><img src="eggs5.jpg.png" alt=""></div>
+            <div class="stage" data-time="720"><img src="eggs6.jpg.png" alt=""></div>
+        </div>
+        <button onclick="showFacts()">Факты и рецепты 📖</button>
+    </div>
 
-    // Клик по яйцу
-    document.querySelectorAll('.stage').forEach(stage => {
-        stage.addEventListener('click', () => {
-            const seconds = parseInt(stage.dataset.time);
-            startNewTimer(seconds);
+    <!-- Таймер -->
+    <div id="timer-screen" class="screen">
+        <h2 id="timer-label">Варка яйца</h2>
+        <h1 id="timer-display">00:00</h1>
+        <img id="dancing-egg" src="dancing_egg.gif.gif" alt="" style="display:none;">
+        <button id="start-btn">Старт</button>
+        <button onclick="backToMain()">Назад</button>
+    </div>
+
+    <!-- Факты -->
+    <div id="facts-screen" class="screen">
+        <h1>Факты и рецепты 🥚</h1>
+        <button onclick="backToMain()">Назад</button>
+    </div>
+
+    <script>
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
+
+        let interval = null;
+        let secondsLeft = 0;
+        let isRunning = false;
+
+        // Заставка
+        setTimeout(() => {
+            document.getElementById('splash').style.display = 'none';
+            document.getElementById('main-screen').style.display = 'flex';
+        }, 2500);
+
+        // Выбор яйца
+        document.querySelectorAll('.stage').forEach(el => {
+            el.addEventListener('click', () => {
+                secondsLeft = parseInt(el.dataset.time);
+                openTimer();
+            });
         });
-    });
 
-    function startNewTimer(totalSeconds) {
-        stopTimer();
-
-        document.getElementById('main-screen').style.display = 'none';
-        document.getElementById('timer-screen').style.display = 'flex';
-
-        endTime = Date.now() + totalSeconds * 1000;
-        isRunning = false;
-
-        updateDisplay();
-
-        const startBtn = document.getElementById('start-btn');
-        const egg = document.getElementById('dancing-egg');
-
-        egg.style.display = 'none';
-        startBtn.innerText = 'Старт';
-        startBtn.disabled = false;
-
-        startBtn.onclick = toggleTimer;
-    }
-
-    function toggleTimer() {
-        if (isRunning) {
-            pauseTimer();
-        } else {
-            runTimer();
+        function openTimer() {
+            document.getElementById('main-screen').style.display = 'none';
+            document.getElementById('timer-screen').style.display = 'flex';
+            isRunning = false;
+            document.getElementById('dancing-egg').style.display = 'none';
+            document.getElementById('start-btn').innerText = 'Старт';
+            updateTimer();
         }
-    }
 
-    function runTimer() {
-        if (isRunning) return;
+        function updateTimer() {
+            const min = Math.floor(secondsLeft / 60);
+            const sec = secondsLeft % 60;
+            document.getElementById('timer-display').innerText = 
+                `${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+        }
 
-        isRunning = true;
-        document.getElementById('start-btn').innerText = 'Пауза';
-        document.getElementById('dancing-egg').style.display = 'block';
+        document.getElementById('start-btn').addEventListener('click', () => {
+            if (isRunning) {
+                // Пауза
+                clearInterval(interval);
+                isRunning = false;
+                document.getElementById('start-btn').innerText = 'Продолжить';
+                document.getElementById('dancing-egg').style.display = 'none';
+            } else {
+                // Старт
+                isRunning = true;
+                document.getElementById('start-btn').innerText = 'Пауза';
+                document.getElementById('dancing-egg').style.display = 'block';
 
-        // Главный цикл таймера
-        timerInterval = setInterval(() => {
-            const now = Date.now();
-            let remaining = Math.max(0, Math.ceil((endTime - now) / 1000));
-
-            updateDisplay(remaining);
-
-            if (remaining <= 0) {
-                finishTimer();
+                interval = setInterval(() => {
+                    secondsLeft--;
+                    updateTimer();
+                    if (secondsLeft <= 0) {
+                        clearInterval(interval);
+                        document.getElementById('dancing-egg').style.display = 'none';
+                        Telegram.WebApp.showAlert('🥚 Яйцо готово!');
+                        document.getElementById('start-btn').innerText = 'Старт';
+                        isRunning = false;
+                    }
+                }, 1000);
             }
-        }, 150);   // чуть чаще, чем секунда — выглядит плавнее
-    }
+        });
 
-    function pauseTimer() {
-        isRunning = false;
-        if (timerInterval) clearInterval(timerInterval);
-        document.getElementById('start-btn').innerText = 'Продолжить';
-        document.getElementById('dancing-egg').style.display = 'none';
-    }
-
-    function stopTimer() {
-        if (timerInterval) {
-            clearInterval(timerInterval);
-            timerInterval = null;
+        function showFacts() {
+            document.getElementById('main-screen').style.display = 'none';
+            document.getElementById('facts-screen').style.display = 'block';
         }
-        isRunning = false;
-    }
 
-    function finishTimer() {
-        stopTimer();
-        document.getElementById('dancing-egg').style.display = 'none';
-        
-        Telegram.WebApp.HapticFeedback.notificationOccurred('success');
-        Telegram.WebApp.showAlert('🥚 Яйцо готово!\nПриятного аппетита!');
-        
-        document.getElementById('start-btn').innerText = 'Старт';
-    }
-
-    // Обновление цифр
-    function updateDisplay(remaining = null) {
-        if (remaining === null) {
-            const now = Date.now();
-            remaining = Math.max(0, Math.ceil((endTime - now) / 1000));
+        function backToMain() {
+            clearInterval(interval);
+            document.getElementById('timer-screen').style.display = 'none';
+            document.getElementById('facts-screen').style.display = 'none';
+            document.getElementById('main-screen').style.display = 'flex';
         }
-        const min = Math.floor(remaining / 60);
-        const sec = remaining % 60;
-        document.getElementById('timer-display').innerText = 
-            `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
-    }
-
-    function showFacts() {
-        document.getElementById('main-screen').style.display = 'none';
-        document.getElementById('facts-screen').style.display = 'block';
-    }
-
-    function backToMain() {
-        stopTimer();
-        document.getElementById('timer-screen').style.display = 'none';
-        document.getElementById('facts-screen').style.display = 'none';
-        document.getElementById('main-screen').style.display = 'flex';
-    }
-
-    window.addEventListener('beforeunload', stopTimer);
-</script>
+    </script>
+</body>
+</html>
