@@ -3,7 +3,7 @@
     Telegram.WebApp.expand();
 
     let timerInterval = null;
-    let remainingSeconds = 0;
+    let endTime = 0;           // точное время, когда таймер должен закончиться
     let isRunning = false;
 
     // Заставка
@@ -20,13 +20,13 @@
         });
     });
 
-    function startNewTimer(seconds) {
-        stopTimer(); // останавливаем старый, если был
+    function startNewTimer(totalSeconds) {
+        stopTimer();
 
         document.getElementById('main-screen').style.display = 'none';
         document.getElementById('timer-screen').style.display = 'flex';
 
-        remainingSeconds = seconds;
+        endTime = Date.now() + totalSeconds * 1000;
         isRunning = false;
 
         updateDisplay();
@@ -56,19 +56,22 @@
         document.getElementById('start-btn').innerText = 'Пауза';
         document.getElementById('dancing-egg').style.display = 'block';
 
+        // Главный цикл таймера
         timerInterval = setInterval(() => {
-            remainingSeconds--;
-            updateDisplay();
+            const now = Date.now();
+            let remaining = Math.max(0, Math.ceil((endTime - now) / 1000));
 
-            if (remainingSeconds <= 0) {
+            updateDisplay(remaining);
+
+            if (remaining <= 0) {
                 finishTimer();
             }
-        }, 1000);
+        }, 150);   // чуть чаще, чем секунда — выглядит плавнее
     }
 
     function pauseTimer() {
         isRunning = false;
-        clearInterval(timerInterval);
+        if (timerInterval) clearInterval(timerInterval);
         document.getElementById('start-btn').innerText = 'Продолжить';
         document.getElementById('dancing-egg').style.display = 'none';
     }
@@ -91,9 +94,14 @@
         document.getElementById('start-btn').innerText = 'Старт';
     }
 
-    function updateDisplay() {
-        const min = Math.floor(remainingSeconds / 60);
-        const sec = remainingSeconds % 60;
+    // Обновление цифр
+    function updateDisplay(remaining = null) {
+        if (remaining === null) {
+            const now = Date.now();
+            remaining = Math.max(0, Math.ceil((endTime - now) / 1000));
+        }
+        const min = Math.floor(remaining / 60);
+        const sec = remaining % 60;
         document.getElementById('timer-display').innerText = 
             `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
     }
@@ -110,6 +118,5 @@
         document.getElementById('main-screen').style.display = 'flex';
     }
 
-    // Очистка при выходе
     window.addEventListener('beforeunload', stopTimer);
 </script>
